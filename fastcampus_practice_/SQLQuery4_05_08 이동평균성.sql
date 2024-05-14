@@ -1,8 +1,8 @@
--- °ú°Å¿¡ ³»°¡ Æ¯Á¤ Á¾¸ñÀ» »ñ´Ù¸é ¾î¶² °á°ú°¡ µÇ¾úÀ»Áö È®ÀÎÇØº¸ÀÚ 
+-- ê³¼ê±°ì— ë‚´ê°€ íŠ¹ì • ì¢…ëª©ì„ ì‚¿ë‹¤ë©´ ì–´ë–¤ ê²°ê³¼ê°€ ë˜ì—ˆì„ì§€ í™•ì¸í•´ë³´ìž 
 
 use doitsql
 
--- ÀÓ½Ã Å×ÀÌºí »ý¼º 'mystock'
+-- ìž„ì‹œ í…Œì´ë¸” ìƒì„± 'mystock'
 create table mystock (
 date datetime,
 symbol nvarchar(255),
@@ -42,10 +42,10 @@ mystock as a
 group by x.symbol, x.date
 order by x.symbol, x.date 
 
--- ÀÌµ¿ Æò±Õ¼± ±¸ÇÏ±â 
--- ÀÏÁ¤ ±â°£¿¡ ÁÖ°¡¸¦ »ê¼ú Æò±ÕÇÑ °ªÀ» ¸ðµÎ ¿¬°áÇÑ ¼± 
--- º¸Åë 5ÀÏ¼±, 20ÀÏ, 60ÀÏ, 120ÀÏ ¹üÀ§·Î º¸¿©ÁØ´Ù.
--- ÇöÀç ³¯Â¥·Î ºÎÅÍ 5ÀÏ ÀÌµ¿, 20ÀÏ ÀÌµ¿ Æò±Õ°ªÀ» °Ë»öÇÏÀÚ 
+-- ì´ë™ í‰ê· ì„  êµ¬í•˜ê¸° 
+-- ì¼ì • ê¸°ê°„ì— ì£¼ê°€ë¥¼ ì‚°ìˆ  í‰ê· í•œ ê°’ì„ ëª¨ë‘ ì—°ê²°í•œ ì„  
+-- ë³´í†µ 5ì¼ì„ , 20ì¼, 60ì¼, 120ì¼ ë²”ìœ„ë¡œ ë³´ì—¬ì¤€ë‹¤.
+-- í˜„ìž¬ ë‚ ì§œë¡œ ë¶€í„° 5ì¼ ì´ë™, 20ì¼ ì´ë™ í‰ê· ê°’ì„ ê²€ìƒ‰í•˜ìž 
 
 select 
 	a.date,
@@ -66,8 +66,8 @@ where a.symbol = 'MSFT'
 group by a.date, a.symbol, a.[close]
 order by a.date 
 
--- ÁÖ½Ä ½ÃÀåÀÇ Æ¯¼º»ó Åä,ÀÏ,°øÈÞÀÏÀº ½ÃÀåÀÌ ¿òÁ÷ÀÌÁö ¾ÊÀ¸´Ï ±×°É Á¦¿ÜÇÏ°í È°µ¿ÇÏ´Â 5ÀÏ,20ÀÏ¸¸ º¸ÀÚ 
--- cte¸¦ »ç¿ëÇØ ÀÏº° ¼øÀ§¸¦ ±¸ÇÑ´ÙÀ½¿¡ Æò±ÕÀ» °Ë»öÇÏÀÚ 
+-- ì£¼ì‹ ì‹œìž¥ì˜ íŠ¹ì„±ìƒ í† ,ì¼,ê³µíœ´ì¼ì€ ì‹œìž¥ì´ ì›€ì§ì´ì§€ ì•Šìœ¼ë‹ˆ ê·¸ê±¸ ì œì™¸í•˜ê³  í™œë™í•˜ëŠ” 5ì¼,20ì¼ë§Œ ë³´ìž 
+-- cteë¥¼ ì‚¬ìš©í•´ ì¼ë³„ ìˆœìœ„ë¥¼ êµ¬í•œë‹¤ìŒì— í‰ê· ì„ ê²€ìƒ‰í•˜ìž 
 
 with cte_avg as (
 select 
