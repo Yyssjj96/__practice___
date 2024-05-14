@@ -2,30 +2,30 @@ USE ecommers
 GO
 
 
---Fact_Order Å×ÀÌºíÀÇ ÀüÃ¼ Æ®·£Àè¼Ç °Ç¼ö È®ÀÎ
+--Fact_Order í…Œì´ë¸”ì˜ ì „ì²´ íŠ¸ëœì­ì…˜ ê±´ìˆ˜ í™•ì¸
 SELECT count(*) FROM Fact_Orders
 
---Fact_Order Å×ÀÌºí¿¡ Á¸ÀçÇÏ´Â À¯´ÏÅ©ÇÑ À¯Àú ¼ö
+--Fact_Order í…Œì´ë¸”ì— ì¡´ì¬í•˜ëŠ” ìœ ë‹ˆí¬í•œ ìœ ì € ìˆ˜
 SELECT count(*) FROM Dim_customer
 
---PG Á¾·ù
+--PG ì¢…ë¥˜
 SELECT * FROM Dim_PG
---°áÁ¦ ¹æ¹ı
+--ê²°ì œ ë°©ë²•
 SELECT * FROM Dim_method
 
--- Ä«Å×°í¸® °­ÁÂ È®ÀÎ
+-- ì¹´í…Œê³ ë¦¬ ê°•ì¢Œ í™•ì¸
 SELECT * FROM Dim_category
 ORDER BY category_title
 
 
---Æ®·£Àè¼Ç ±â°£ È®ÀÎ
+--íŠ¸ëœì­ì…˜ ê¸°ê°„ í™•ì¸
 SELECT MIN(completed_at), MAX(completed_at)  FROM Fact_orders
 SELECT completed_at FROM Fact_orders GROUP BY completed_at ORDER BY completed_at DESC
 
 SELECT * FROM Fact_orders WHERE completed_at = N'B2B'
-SELECT * FROM Fact_orders WHERE completed_at = N'ÇÁ·Î±×·¡¹Ö'
-SELECT * FROM Fact_orders WHERE completed_at = N'ÀÌº¥Æ®'
-SELECT * FROM Fact_orders WHERE completed_at = N'¿ÃÀÎ¿ø'
+SELECT * FROM Fact_orders WHERE completed_at = N'í”„ë¡œê·¸ë˜ë°'
+SELECT * FROM Fact_orders WHERE completed_at = N'ì´ë²¤íŠ¸'
+SELECT * FROM Fact_orders WHERE completed_at = N'ì˜¬ì¸ì›'
 
 UPDATE a SET 
 	course_title = b.course_title,
@@ -44,7 +44,7 @@ UPDATE a SET
 FROM Fact_Orders AS a
 	INNER JOIN(
 
---ºñÁ¤»ó µ¥ÀÌÅÍ ¾÷µ¥ÀÌÆ®ÇÏ¿© ¸ÂÃß±â WHERE completed_at = N'B2B'
+--ë¹„ì •ìƒ ë°ì´í„° ì—…ë°ì´íŠ¸í•˜ì—¬ ë§ì¶”ê¸° WHERE completed_at = N'B2B'
 SELECT
 	id,
 	customer_id,
@@ -69,7 +69,7 @@ WHERE completed_at = N'B2B'
 
 UNION ALL
 
---ºñÁ¤»ó µ¥ÀÌÅÍ ¾÷µ¥ÀÌÆ®ÇÏ¿© ¸ÂÃß±â WHERE completed_at = N'¿ÃÀÎ¿ø'
+--ë¹„ì •ìƒ ë°ì´í„° ì—…ë°ì´íŠ¸í•˜ì—¬ ë§ì¶”ê¸° WHERE completed_at = N'ì˜¬ì¸ì›'
 SELECT
 	id,
 	customer_id,
@@ -90,11 +90,11 @@ SELECT
 	SUBSTRING(marketing_start_at, 1, CHARINDEX(',', marketing_start_at) -1) as subcategory_title,
 	SUBSTRING(marketing_start_at, len(marketing_start_at) - CHARINDEX(',', REVERSE(marketing_start_at)) + 2, len(marketing_start_at)) as marketing_start_at
 FROM Fact_Orders
-WHERE completed_at = N'¿ÃÀÎ¿ø'
+WHERE completed_at = N'ì˜¬ì¸ì›'
 
 UNION ALL
 
---ºñÁ¤»ó µ¥ÀÌÅÍ ¾÷µ¥ÀÌÆ®ÇÏ¿© ¸ÂÃß±â WHERE completed_at = N'ÇÁ·Î±×·¡¹Ö'
+--ë¹„ì •ìƒ ë°ì´í„° ì—…ë°ì´íŠ¸í•˜ì—¬ ë§ì¶”ê¸° WHERE completed_at = N'í”„ë¡œê·¸ë˜ë°'
 SELECT
 	id,
 	customer_id,
@@ -115,14 +115,14 @@ SELECT
 	SUBSTRING(marketing_start_at,	len(marketing_start_at) - CHARINDEX(',', REVERSE(marketing_start_at),25) +2,	len(marketing_start_at) - (	(len(marketing_start_at) - CHARINDEX(',', REVERSE(marketing_start_at),25) +2) + CHARINDEX(',', REVERSE(marketing_start_at)) -1	)		) as subcategory_title,
 	SUBSTRING(marketing_start_at, len(marketing_start_at) - CHARINDEX(',', REVERSE(marketing_start_at)) + 2, len(marketing_start_at)) as marketing_start_at
 FROM Fact_Orders
-WHERE completed_at = N'ÇÁ·Î±×·¡¹Ö'
+WHERE completed_at = N'í”„ë¡œê·¸ë˜ë°'
 ) AS b ON a.id = b.id
 
 
---ÀÌº¥Æ® µ¥ÀÌÅÍ ¿À·ù´Â »èÁ¦
-DELETE Fact_Orders WHERE completed_at = N'ÀÌº¥Æ®'
+--ì´ë²¤íŠ¸ ë°ì´í„° ì˜¤ë¥˜ëŠ” ì‚­ì œ
+DELETE Fact_Orders WHERE completed_at = N'ì´ë²¤íŠ¸'
 
---PG µ¥ÀÌÅÍ ¿À·ù ¼öÁ¤
+--PG ë°ì´í„° ì˜¤ë¥˜ ìˆ˜ì •
 UPDATE a SET 
 	course_title = b.course_title,
 	category_title = b.category_title,
