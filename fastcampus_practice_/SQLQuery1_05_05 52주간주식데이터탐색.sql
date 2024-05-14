@@ -1,19 +1,19 @@
--- 52ÁÖ°£ÀÇ ÃÖ°í°¡, ÃÖÀú°¡¸¦ ±¸ÇÏ°í Â÷ÀÌ¸¦ º»´Ù. 
--- »ó½ÂÇßÀ¸¸é »ó½Â ¼öÄ¡¸¦ º¸°í 
--- º¯µ¿ÀÌ Å« Á¾¸ñµéÀ» º¯µ¿¼º ±âÁØÀ¸·Î ³»¸²Â÷¼øÀ¸·Î ºÁº¸ÀÚ 
+-- 52ì£¼ê°„ì˜ ìµœê³ ê°€, ìµœì €ê°€ë¥¼ êµ¬í•˜ê³  ì°¨ì´ë¥¼ ë³¸ë‹¤. 
+-- ìƒìŠ¹í–ˆìœ¼ë©´ ìƒìŠ¹ ìˆ˜ì¹˜ë¥¼ ë³´ê³  
+-- ë³€ë™ì´ í° ì¢…ëª©ë“¤ì„ ë³€ë™ì„± ê¸°ì¤€ìœ¼ë¡œ ë‚´ë¦¼ì°¨ìˆœìœ¼ë¡œ ë´ë³´ì 
 
-/* ÁÖ½Ä ºĞ¼®¿ëÀ¸·Î »ç¿ëÇÏ´Â Å×ÀÌºíÀÇ Á¤º¸ 
-nasdaq_company = ±â¾÷ÀÇ Á¤º¸ 
-stock = ±â¾÷ÀÇ ÀÏÀÏ ÁÖ°¡ Á¤º¸ 
-industry_group_symbol = ±×·ì º°·Î ¸ğ¾Æ³í ½Éº¼ Á¤º¸ 
-industry_group = ±â¾÷ÀÇ »ê¾÷ Á¾·ù¿Í ±¸ºĞÅ° Á¤º¸ 
+/* ì£¼ì‹ ë¶„ì„ìš©ìœ¼ë¡œ ì‚¬ìš©í•˜ëŠ” í…Œì´ë¸”ì˜ ì •ë³´ 
+nasdaq_company = ê¸°ì—…ì˜ ì •ë³´ 
+stock = ê¸°ì—…ì˜ ì¼ì¼ ì£¼ê°€ ì •ë³´ 
+industry_group_symbol = ê·¸ë£¹ ë³„ë¡œ ëª¨ì•„ë…¼ ì‹¬ë³¼ ì •ë³´ 
+industry_group = ê¸°ì—…ì˜ ì‚°ì—… ì¢…ë¥˜ì™€ êµ¬ë¶„í‚¤ ì •ë³´ 
 */
 
--- stock = datetime º¸Åë float ±â¾÷ÀÇ symbol = nvarchar(255)
+-- stock = datetime ë³´í†µ float ê¸°ì—…ì˜ symbol = nvarchar(255)
 
 use doitsql 
 
--- 52ÁÖ°£ ÃÖ¼Ò, ÃÖ´ë µÑÀÇ Â÷ÀÌ µÑÀÇ Â÷ÀÌ¸¦ º¸ÀÚ! 
+-- 52ì£¼ê°„ ìµœì†Œ, ìµœëŒ€ ë‘˜ì˜ ì°¨ì´ ë‘˜ì˜ ì°¨ì´ë¥¼ ë³´ì! 
 select 
 	symbol,
 	convert(decimal(18,2), min([close])) as w52_min,
@@ -26,16 +26,16 @@ where date >= dateadd(week, -52, '2021-10-04')
 group by symbol 
 order by w52_diff_ratio desc; 
 
--- ¼­ºêÄõ¸®·Îµµ ¸¸µéÀÚ! 
--- ¿À·ù°¡ ³­´Ù ¤Ğ 0°ªÀÌ ÀÖ¾î¼­ ¤Ğ 
+-- ì„œë¸Œì¿¼ë¦¬ë¡œë„ ë§Œë“¤ì! 
+-- ì˜¤ë¥˜ê°€ ë‚œë‹¤ ã…  0ê°’ì´ ìˆì–´ì„œ ã…  
 select 
 x.symbol,
 w52_min, 
 w52_max,
 w52_max - w52_min as w52_diff_price, 
 (w52_max - w52_min) / w52_min * 100 as w52_diff_ratio
--- ¼­ºêÄõ¸®·Î ¸ÕÀú Â¥¸£°í °è»êÇØ¼­ 0°ªÀÌ Æ÷ÇÔµÇ¾î ¹ö¸°µí. 
--- ÇØ°á¹ı : convert (decimal(18,2), case when w52_min > 0 then (w52_max - w52_min) / w52_min * 100 else 0 end ) as w52_diff_ratio 
+-- ì„œë¸Œì¿¼ë¦¬ë¡œ ë¨¼ì € ì§œë¥´ê³  ê³„ì‚°í•´ì„œ 0ê°’ì´ í¬í•¨ë˜ì–´ ë²„ë¦°ë“¯. 
+-- í•´ê²°ë²• : convert (decimal(18,2), case when w52_min > 0 then (w52_max - w52_min) / w52_min * 100 else 0 end ) as w52_diff_ratio 
 from ( 
 	select 
 		symbol, 
@@ -46,13 +46,13 @@ from (
 			and date <= '2021-10-04'
 		group by symbol) as x 
 
--- ¹«½¼ Á¾¸ñÀÌ ÃÖ±Ù »ó½Â¼¼ ÀÎÁö º¸ÀÚ! 
+-- ë¬´ìŠ¨ ì¢…ëª©ì´ ìµœê·¼ ìƒìŠ¹ì„¸ ì¸ì§€ ë³´ì! 
 
--- ÃÖÀú°¡ ±â·Ï½Ã °¡Àå ´ÊÀº ³¯Â¥ ±¸ÇØº¸±â 
+-- ìµœì €ê°€ ê¸°ë¡ì‹œ ê°€ì¥ ëŠ¦ì€ ë‚ ì§œ êµ¬í•´ë³´ê¸° 
 select 
 	max(a.date) as date, 
 	a.symbol, 
-	a.[close] into #temp_min -- ÀÌ ¼¼¼Ç¿¡¼­¸¸ ÀÛµ¿ÇÏ´Â ÀÓ½ÃÅ×ÀÌºí 
+	a.[close] into #temp_min -- ì´ ì„¸ì…˜ì—ì„œë§Œ ì‘ë™í•˜ëŠ” ì„ì‹œí…Œì´ë¸” 
 from 
 	(select 
 		date, 
@@ -72,7 +72,7 @@ from
 	  as b on a.symbol = b.symbol and a.[close] = b.w52_max 
 group by a.symbol, a.[close]
 
--- ÃÖ°í°¡ ±â·Ï½Ã °¡Àå ´ÊÀº ³¯Â¥ 
+-- ìµœê³ ê°€ ê¸°ë¡ì‹œ ê°€ì¥ ëŠ¦ì€ ë‚ ì§œ 
 select 
 	max(a.date) as date, 
 	a.symbol,
@@ -98,19 +98,19 @@ from (
 	group by a.symbol, a.[close] 
 
 
--- ÀÓ½ÃÅ×ÀÌºí È®ÀÎ 
+-- ì„ì‹œí…Œì´ë¸” í™•ì¸ 
 select * from #temp_min
 select * from #temp_max 
 
--- ÇÕÃÄ¼­ È®ÀÎÇØº¸ÀÚ 
--- ÃÖ±Ù ³¯Â¥°¡ ÃÖÀú°¡ ´ëºñÇØ¼­ »ó½ÂÀÎÁö 
+-- í•©ì³ì„œ í™•ì¸í•´ë³´ì 
+-- ìµœê·¼ ë‚ ì§œê°€ ìµœì €ê°€ ëŒ€ë¹„í•´ì„œ ìƒìŠ¹ì¸ì§€ 
 select 
 	b.symbol,
 	case when b.date >= a.date then 'Y' else 'N' end as increase_yn 
 from #temp_min as a 
 	inner join #temp_max b on a.symbol = b.symbol 
 
--- 52ÁÖ°£ÀÇ ÃÖ¼Ò, ÃÖ´ë°ªÀ¸·Î ¿ì»óÇâÀÎ Á¾¸ñ Ã£±â 
+-- 52ì£¼ê°„ì˜ ìµœì†Œ, ìµœëŒ€ê°’ìœ¼ë¡œ ìš°ìƒí–¥ì¸ ì¢…ëª© ì°¾ê¸° 
 select 
 	x.symbol, 
 	x.w52_max, 
