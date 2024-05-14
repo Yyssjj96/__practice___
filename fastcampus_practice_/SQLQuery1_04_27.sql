@@ -1,19 +1,19 @@
--- where ¼­ºêÄõ¸®´Â nested subquery , ÁßÃ¸ ¼­ºê Äõ¸® 
--- Á¶°Ç¹®ÀÇ ÀÏºÎ·Î »ç¿ë 
--- ºñ±³ ¿¬»êÀÚ¿Í »ç¿ë ÇÒ ¼ö ÀÖ´Âµ¥ ±×·² °æ¿ì °á°ú°¡ 1°ÇÀÌ¾î¾ß ÇÑ´Ù
--- 2°Ç ÀÌ»óÀÌ¸é ´ÙÁß Çà ¿¬»êÀÚ¸¦ »ç¿ë ÇØ¾ß ÇÑ´Ù 
+-- where ì„œë¸Œì¿¼ë¦¬ëŠ” nested subquery , ì¤‘ì²© ì„œë¸Œ ì¿¼ë¦¬ 
+-- ì¡°ê±´ë¬¸ì˜ ì¼ë¶€ë¡œ ì‚¬ìš© 
+-- ë¹„êµ ì—°ì‚°ìžì™€ ì‚¬ìš© í•  ìˆ˜ ìžˆëŠ”ë° ê·¸ëŸ´ ê²½ìš° ê²°ê³¼ê°€ 1ê±´ì´ì–´ì•¼ í•œë‹¤
+-- 2ê±´ ì´ìƒì´ë©´ ë‹¤ì¤‘ í–‰ ì—°ì‚°ìžë¥¼ ì‚¬ìš© í•´ì•¼ í•œë‹¤ 
 
-/* ´ÜÀÏ Çà ¼­ºêÄõ¸®
+/* ë‹¨ì¼ í–‰ ì„œë¸Œì¿¼ë¦¬
 
 select (col) 
 from table 
 where (col) = (select <col> from table)
 
-ºñ±³ ¿¬»êÀÚÀÎ '=' °¡ ¾²ÀÓ 
+ë¹„êµ ì—°ì‚°ìžì¸ '=' ê°€ ì“°ìž„ 
 
 */
 
-/* ´ÙÁß Çà ¼­ºêÄõ¸® 
+/* ë‹¤ì¤‘ í–‰ ì„œë¸Œì¿¼ë¦¬ 
 
 select * from nasdaq_company
 where symbol in (
@@ -30,13 +30,13 @@ C.symbol,
 C.company_name,
 C.ipo_year,
 C.sector
-FROM industry_group AS A  -- FROM Àý ¸ÕÀú È®ÀÎ ÇÏ´Â°Ô ºÐ¼®¿¡ ÁÁÀ½ 
+FROM industry_group AS A  -- FROM ì ˆ ë¨¼ì € í™•ì¸ í•˜ëŠ”ê²Œ ë¶„ì„ì— ì¢‹ìŒ 
 INNER JOIN industry_group_symbol AS B ON A.NUM = B.NUM 
 INNER JOIN nasdaq_company AS C ON B.SYMBOL = C.SYMBOL
-WHERE A.industry = N'ÀÚµ¿Â÷'
+WHERE A.industry = N'ìžë™ì°¨'
 ORDER BY SYMBOL 
 
--- À§ÀÇ Äõ¸®¸¦ ¼­ºêÄõ¸®·Î ÇØº¸ÀÚ 
+-- ìœ„ì˜ ì¿¼ë¦¬ë¥¼ ì„œë¸Œì¿¼ë¦¬ë¡œ í•´ë³´ìž 
 
 SELECT *
 FROM nasdaq_company
@@ -44,10 +44,10 @@ WHERE SYMBOL IN (
 	SELECT SYMBOL FROM industry_group AS A 
 	INNER JOIN industry_group_symbol AS B 
 		ON A.NUM = B.NUM 
-	WHERE A.industry = N'ÀÚµ¿Â÷')
+	WHERE A.industry = N'ìžë™ì°¨')
 
--- IN, ANY = ÇÏ³ª¶óµµ ¸¸Á·ÇÏ¸é ¹ÝÈ¯ 
--- EXIST, NOT EXIST Á¶°ÇÀÇ °á°ú°ªÀÌ ÀÖ´ÂÁö ¾ø´ÂÁö, ÀÖÀ¸¸é TRUE ¾øÀ¸¸é FALSE 
+-- IN, ANY = í•˜ë‚˜ë¼ë„ ë§Œì¡±í•˜ë©´ ë°˜í™˜ 
+-- EXIST, NOT EXIST ì¡°ê±´ì˜ ê²°ê³¼ê°’ì´ ìžˆëŠ”ì§€ ì—†ëŠ”ì§€, ìžˆìœ¼ë©´ TRUE ì—†ìœ¼ë©´ FALSE 
 
 
 -- ANY 
@@ -64,39 +64,39 @@ WHERE SYMBOL > ANY (
 	WHERE SYMBOL IN ('MSFT','LTCH','ZY')
 	)
 
--- EXIST ¼­ºêÄõ¸®°¡ TRUE ¸é ¸ÞÀÎÄõ¸® ½ÇÇà 
+-- EXIST ì„œë¸Œì¿¼ë¦¬ê°€ TRUE ë©´ ë©”ì¸ì¿¼ë¦¬ ì‹¤í–‰ 
 SELECT * FROM NASDAQ_COMPANY 
 WHERE EXISTS (
 	SELECT SYMBOL FROM NASDAQ_COMPANY
 	WHERE SYMBOL IN ('MSFT','AMD','AMZN')
 	)	
 
--- ALL ¼¼°³ ´Ù ¸¸Á·ÇØ¾ß ¸ÞÀÎÄõ¸® ½ÇÇà 
+-- ALL ì„¸ê°œ ë‹¤ ë§Œì¡±í•´ì•¼ ë©”ì¸ì¿¼ë¦¬ ì‹¤í–‰ 
 SELECT * FROM NASDAQ_COMPANY 
 WHERE SYMBOL = ALL (
 	SELECT SYMBOL FROM NASDAQ_COMPANY
 	WHERE SYMBOL IN ('MSFT','LTCH','ZY')
 	)
 
--- º¸Åë IN, EXIST ¸¹ÀÌ »ç¿ëÇÑ´Ù°í ÇÕ´Ï´Ù~
+-- ë³´í†µ IN, EXIST ë§Žì´ ì‚¬ìš©í•œë‹¤ê³  í•©ë‹ˆë‹¤~
 
 
 /* 
-FROM Àý¿¡ ¼­ºê Äõ¸® »ç¿ë 
-ÀÎ¶óÀÎ ºä ¶ó°í ÇÑ´Ù 
-SELECT ÀýÀÇ °á°ú¸¦ FROM Àý¿¡¼­ ÇÏ³ªÀÇ Å×ÀÌºí Ã³·³ »ç¿ëÇÏ°í ½ÍÀ» ¶§ 
-FROM ¹®¿¡ »ç¿ëÇÏ´Â ¼­ºê Äõ¸® °á°ú´Â Á¶ÀÎ ÇÒ ¼ö ÀÖÀ¸¹Ç·Î 
-Äõ¸®¸¦ ³í¸®ÀûÀ¸·Î °Ý¸® ÇÒ ¼ö ÀÖ´Ù. ¾È¿¡ ÀÖ´Â ¼­ºêÄõ¸®¸¸ »ç¿ë °¡´É
+FROM ì ˆì— ì„œë¸Œ ì¿¼ë¦¬ ì‚¬ìš© 
+ì¸ë¼ì¸ ë·° ë¼ê³  í•œë‹¤ 
+SELECT ì ˆì˜ ê²°ê³¼ë¥¼ FROM ì ˆì—ì„œ í•˜ë‚˜ì˜ í…Œì´ë¸” ì²˜ëŸ¼ ì‚¬ìš©í•˜ê³  ì‹¶ì„ ë•Œ 
+FROM ë¬¸ì— ì‚¬ìš©í•˜ëŠ” ì„œë¸Œ ì¿¼ë¦¬ ê²°ê³¼ëŠ” ì¡°ì¸ í•  ìˆ˜ ìžˆìœ¼ë¯€ë¡œ 
+ì¿¼ë¦¬ë¥¼ ë…¼ë¦¬ì ìœ¼ë¡œ ê²©ë¦¬ í•  ìˆ˜ ìžˆë‹¤. ì•ˆì— ìžˆëŠ” ì„œë¸Œì¿¼ë¦¬ë§Œ ì‚¬ìš© ê°€ëŠ¥
 
 SELECT <COL> FROM 
-¼­ºêÄõ¸® (ÀÎ¶óÀÎ ºä) AS A 
-¼­ºêÄõ¸® (ÀÎ¶óÀÎ ºä) AS B 
+ì„œë¸Œì¿¼ë¦¬ (ì¸ë¼ì¸ ë·°) AS A 
+ì„œë¸Œì¿¼ë¦¬ (ì¸ë¼ì¸ ë·°) AS B 
 ON A.COL = B.COL 
 WHERE COL = VALUE
 
-ÀÎ¶óÀÎ ºä ¼­ºêÄõ¸®´Â ¹Ýµå½Ã º°Äª »ç¿ë 
-ÀÎ¶óÀÎ ºä ¿¡´Â ±âº»ÀûÀ¸·Î ORDER BY »ç¿ë ºÒ°¡ 
-Æ¯º° ÇÒ °æ¿ì »ç¿ë °¡´É 
+ì¸ë¼ì¸ ë·° ì„œë¸Œì¿¼ë¦¬ëŠ” ë°˜ë“œì‹œ ë³„ì¹­ ì‚¬ìš© 
+ì¸ë¼ì¸ ë·° ì—ëŠ” ê¸°ë³¸ì ìœ¼ë¡œ ORDER BY ì‚¬ìš© ë¶ˆê°€ 
+íŠ¹ë³„ í•  ê²½ìš° ì‚¬ìš© ê°€ëŠ¥ 
 */
 
 SELECT 
@@ -108,8 +108,8 @@ WHERE A.SYMBOL = 'MSFT'
 AND B.DATE >= '2021-10-01'
 AND B.DATE < '2021-11-01'
 
--- ÀÌ°É ÀÎ¶óÀÎºä·Î ¹Ù²ãº¸ÀÚ 
--- STOCK Å×ÀÌºíÀ» Á¶°ÇÀ» °®Ãç¼­ ¸ÕÀú ÃßÃâÇÏ°í Á¶ÀÎÇÑ´Ù. 
+-- ì´ê±¸ ì¸ë¼ì¸ë·°ë¡œ ë°”ê¿”ë³´ìž 
+-- STOCK í…Œì´ë¸”ì„ ì¡°ê±´ì„ ê°–ì¶°ì„œ ë¨¼ì € ì¶”ì¶œí•˜ê³  ì¡°ì¸í•œë‹¤. 
 SELECT 
 A.SYMBOL , A.company_name, A.ipo_year, A.sector, A.industry,
 B.DATE, B.[open], B.[high],B.[LOW],B.[CLOSE], B.adj_close
@@ -121,17 +121,17 @@ AND DATE >= '2021-10-01'
 AND DATE < '2021-11-01'
 ) AS B ON A.SYMBOL = B.SYMBOL 
 
--- JOIN SUBQUERY¸¦ »ý°¢ÇÏ¸ç ´õ ÁÁÀº ¼º´ÉÀÇ Äõ¸® ¹®À» »ç¿ëÇØº¸ÀÚ 
+-- JOIN SUBQUERYë¥¼ ìƒê°í•˜ë©° ë” ì¢‹ì€ ì„±ëŠ¥ì˜ ì¿¼ë¦¬ ë¬¸ì„ ì‚¬ìš©í•´ë³´ìž 
 
 
--- ALIAS¸¦ ¾²Áö ¾ÊÀ¸¸é ¿¡·¯°¡ ³­´Ù. 
+-- ALIASë¥¼ ì“°ì§€ ì•Šìœ¼ë©´ ì—ëŸ¬ê°€ ë‚œë‹¤. 
 SELECT * 
 FROM(
 	SELECT * FROM DoItSQL.DBO.nasdaq_company
 	) AS A 
 
 
--- ORDER BY ÀýÀº »ç¿ë ºÒ°¡ÇÏÁö¸¶ TOP10°°Àº Æ¯Â¡ÀÌ ÀÖÀ¸¸é »ç¿ë°¡´É 
+-- ORDER BY ì ˆì€ ì‚¬ìš© ë¶ˆê°€í•˜ì§€ë§ˆ TOP10ê°™ì€ íŠ¹ì§•ì´ ìžˆìœ¼ë©´ ì‚¬ìš©ê°€ëŠ¥ 
 SELECT 
 	A.*
 FROM DoItSQL.DBO.nasdaq_company AS A 
@@ -153,7 +153,7 @@ WHERE A.SYMBOL = 'MSFT'
 	AND B.DATE >='2021-10-01'
 	AND B.DATE < '2021-11-01'
 
--- À§ÀÇ Äõ¸®¸¦ ¼­ºêÄõ¸®·Î ¹Ù²ãº¸ÀÚ 
+-- ìœ„ì˜ ì¿¼ë¦¬ë¥¼ ì„œë¸Œì¿¼ë¦¬ë¡œ ë°”ê¿”ë³´ìž 
 
 SELECT A.*, C.INDUSTRY 
 FROM (
@@ -175,18 +175,18 @@ FROM DoItSQL.DBO.nasdaq_company AS A
 	)
 	AS A INNER JOIN DoItSQL.DBO.industry_group AS C ON A.NUM = C.NUM
 
--- WHERE ÁßÃ¸¼­ºêÄõ¸®, FROM ÀÎ¶óÀÎ ºä, SELECT ½ºÄ®¶ó ¼­ºê Äõ¸® 
--- ½ºÄ®¶ó ¼­ºê Äõ¸®´Â ¹Ýµå½Ã ÇÏ³ªÀÇ °ªÀ» Ãâ·Â ÇÑ´Ù. 
--- ±×·¯¹Ç·Î º¸Åë SUM, COUNT, MIN, MAX ¿Í °°Àº Áý°èÇÔ¼ö¿Í °°ÀÌ ¾²ÀÌ´Â °æ¿ì°¡ ¸¹´Ù. 
--- ½ºÄ®¶ó ¼­ºêÄõ¸®´Â ¸ÞÀÎÄõ¸® -> ¼­ºêÄõ¸® ¼ø¼­·Î ½ÇÇØµÈ´Ù. 
--- ¸ÞÀÎ Äõ¸® °á°ú °Ç¼ö ¸¸Å­ ¼­ºê Äõ¸®°¡ ½ÇÇàµÇ±â ¶§¹®¿¡ ÁýÇÕÀÌ ¸¹Àº °æ¿ì ¼º´É ¹®Á¦°¡ ¹ß»ý 
--- Çö¾÷¿¡¼­ º°·Î ±ÇÀåµÇÁö ¾Ê´Âµ¥... 
+-- WHERE ì¤‘ì²©ì„œë¸Œì¿¼ë¦¬, FROM ì¸ë¼ì¸ ë·°, SELECT ìŠ¤ì¹¼ë¼ ì„œë¸Œ ì¿¼ë¦¬ 
+-- ìŠ¤ì¹¼ë¼ ì„œë¸Œ ì¿¼ë¦¬ëŠ” ë°˜ë“œì‹œ í•˜ë‚˜ì˜ ê°’ì„ ì¶œë ¥ í•œë‹¤. 
+-- ê·¸ëŸ¬ë¯€ë¡œ ë³´í†µ SUM, COUNT, MIN, MAX ì™€ ê°™ì€ ì§‘ê³„í•¨ìˆ˜ì™€ ê°™ì´ ì“°ì´ëŠ” ê²½ìš°ê°€ ë§Žë‹¤. 
+-- ìŠ¤ì¹¼ë¼ ì„œë¸Œì¿¼ë¦¬ëŠ” ë©”ì¸ì¿¼ë¦¬ -> ì„œë¸Œì¿¼ë¦¬ ìˆœì„œë¡œ ì‹¤í•´ëœë‹¤. 
+-- ë©”ì¸ ì¿¼ë¦¬ ê²°ê³¼ ê±´ìˆ˜ ë§Œí¼ ì„œë¸Œ ì¿¼ë¦¬ê°€ ì‹¤í–‰ë˜ê¸° ë•Œë¬¸ì— ì§‘í•©ì´ ë§Žì€ ê²½ìš° ì„±ëŠ¥ ë¬¸ì œê°€ ë°œìƒ 
+-- í˜„ì—…ì—ì„œ ë³„ë¡œ ê¶Œìž¥ë˜ì§€ ì•ŠëŠ”ë°... 
  
 /* SELECT <COL>
-	¼­ºêÄõ¸® 
-	¼­ºêÄõ¸® 
-	¼­ºêÄõ¸® 
-	¼­ºêÄõ¸® 
+	ì„œë¸Œì¿¼ë¦¬ 
+	ì„œë¸Œì¿¼ë¦¬ 
+	ì„œë¸Œì¿¼ë¦¬ 
+	ì„œë¸Œì¿¼ë¦¬ 
 FROM TABLE_NAME 
 WHERE <COL> = <VALUE> */ 
 
