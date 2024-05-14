@@ -6,7 +6,7 @@ select * from doit_cross1
 create table doit_cross2(name nvarchar(10))
 insert into doit_cross2 values (N'Do'),(N'It'),(N'SQL')
 
--- CROSS JOIN ÀÌÇØÇØº¸±â  
+-- CROSS JOIN ì´í•´í•´ë³´ê¸°  
 SELECT 
 	A.NUM,
 	B.NAME
@@ -19,12 +19,12 @@ DROP TABLE doit_cross2
 -- SELF JOIN 
 
 SELECT 
-	A.SYMBOL, B.COMPANY_NAME -- ALIAS ÇÊ¼ö		
+	A.SYMBOL, B.COMPANY_NAME -- ALIAS í•„ìˆ˜		
 FROM DoItSQL.DBO.nasdaq_company AS A 
 	INNER JOIN DoItSQL.DBO.nasdaq_company AS B 
 	ON A.SYMBOL = B.SYMBOL 
 
--- ¿À´ÃÀÇ µ¥ÀÌÅÍ¿Í ¾îÁ¦ÀÇ µ¥ÀÌÅÍÀÇ Â÷ÀÌ¸¦ º¸¿©ÁÖ´Â Äõ¸®¹® 
+-- ì˜¤ëŠ˜ì˜ ë°ì´í„°ì™€ ì–´ì œì˜ ë°ì´í„°ì˜ ì°¨ì´ë¥¼ ë³´ì—¬ì£¼ëŠ” ì¿¼ë¦¬ë¬¸ 
 SELECT
 	A.DATE AS A_DATE,
 	A.[close] AS A_CLOSE,
