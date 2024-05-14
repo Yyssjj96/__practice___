@@ -1,8 +1,8 @@
 use doitsql 
 
--- ÇÏ·ç µ¿¾È »ó½Â, ÇÏ¶ô Á¾¸ñ ºĞ¼® 
--- ÇÏ·ç ÁÖ½ÄÀÇ ½ÃÀÛ°¡, Á¾°¡, °Å·¡ ÃÖ´ë°¡, °Å·¡ ÃÖ¼Ò°¡µîÀ» ÀÌ¿ë
--- °°Àº »ê¾÷±º ³¢¸® »ó½ÂÇß´ÂÁö º¸ÀÚ 
+-- í•˜ë£¨ ë™ì•ˆ ìƒìŠ¹, í•˜ë½ ì¢…ëª© ë¶„ì„ 
+-- í•˜ë£¨ ì£¼ì‹ì˜ ì‹œì‘ê°€, ì¢…ê°€, ê±°ë˜ ìµœëŒ€ê°€, ê±°ë˜ ìµœì†Œê°€ë“±ì„ ì´ìš©
+-- ê°™ì€ ì‚°ì—…êµ° ë¼ë¦¬ ìƒìŠ¹í–ˆëŠ”ì§€ ë³´ì 
 
 select 
 	b.symbol,
@@ -22,11 +22,11 @@ select
 from stock as a 
 	inner join nasdaq_company as b on a.symbol = b.symbol 
 where date = '2021-10-06'
-	and convert(decimal(18,2),[close] - [open] / [open]*100 ) >= 10 --10ÆÛ¼¾Æ® ÀÌ»ó ¿À¸¥°Å 
+	and convert(decimal(18,2),[close] - [open] / [open]*100 ) >= 10 --10í¼ì„¼íŠ¸ ì´ìƒ ì˜¤ë¥¸ê±° 
 	
 
 
--- °°Àº »ê¾÷±º ³¢¸® ºÁº¸ÀÚ 
+-- ê°™ì€ ì‚°ì—…êµ° ë¼ë¦¬ ë´ë³´ì 
 select 
 	b.symbol,
 	b.company_name,
@@ -47,7 +47,7 @@ from stock as a
 	inner join industry_group_symbol as c on a.symbol = c.symbol 
 	inner join industry_group as d on c.num = d.num
 where a.date = '2021-10-06' 
-	and d.industry = N'ÀÚµ¿Â÷' 
+	and d.industry = N'ìë™ì°¨' 
 
 select * from industry_group_symbol
 select * from industry_group
@@ -68,7 +68,7 @@ GM
 FSR
 F
 
--- Çà¿­À» Ä¡È¯ÇØ¼­ º¸±â 
+-- í–‰ì—´ì„ ì¹˜í™˜í•´ì„œ ë³´ê¸° 
 
 select 
 	'Ratio Is' as increase_ratio,
@@ -86,10 +86,10 @@ pivot(
 	for symbol in ([F],[TSLA],[SOLO],[KNDI])
 	)as pivot_table
 
--- ÀüÀÏ ´ëºñ »ó½Â Á¾¸ñ ºĞ¼® 
--- ¿À´Ã ³¯Â¥ÀÇ Çà°ú ¾îÁ¦ ³¯Â¥ÀÇ ÇàÀ» ÀÏÄ¡½ÃÄÑ¼­ »©º¸ÀÚ! 
+-- ì „ì¼ ëŒ€ë¹„ ìƒìŠ¹ ì¢…ëª© ë¶„ì„ 
+-- ì˜¤ëŠ˜ ë‚ ì§œì˜ í–‰ê³¼ ì–´ì œ ë‚ ì§œì˜ í–‰ì„ ì¼ì¹˜ì‹œì¼œì„œ ë¹¼ë³´ì! 
 -- SELF JOIN, LAG/LEAD 
--- SELF JOIN ÇÒ¶§ º°Äª Àß ¾²ÀÚ!
+-- SELF JOIN í• ë•Œ ë³„ì¹­ ì˜ ì“°ì!
 
 select 
 	a.symbol,
@@ -104,10 +104,10 @@ select
 	case when convert(decimal(18,2), b.[close]-a.[close]) > 0 then 'up' else 'down' end as upNdown
 from stock as a
 	inner join stock as b on a.symbol = b.symbol and
-	a.date = dateadd(day, -1, b.date) -- b°¡ ÇÏ·ç ´ÊÀº µ¥ÀÌÅÍ, ³Ê¹« ¿À·¡°É¸°´Ù... 
+	a.date = dateadd(day, -1, b.date) -- bê°€ í•˜ë£¨ ëŠ¦ì€ ë°ì´í„°, ë„ˆë¬´ ì˜¤ë˜ê±¸ë¦°ë‹¤... 
 where a.date = '2021-10-06' 
 
--- ÀÌ¹ø¿£ lead ÇÔ¼ö·Î ÀüÀÏ ´ëºñ Áõ°¨°ú Áõ°¨·ü °Ë»ö 
+-- ì´ë²ˆì—” lead í•¨ìˆ˜ë¡œ ì „ì¼ ëŒ€ë¹„ ì¦ê°ê³¼ ì¦ê°ë¥  ê²€ìƒ‰ 
 select 
 	x.symbol,
 	x.date,
@@ -125,9 +125,9 @@ from stock
 where date >= '2021-10-06' and date <= '2021-10-07') as x 
 where b_close is not null 
 	and convert(decimal(18,2), b_close - a_close ) > 0 
-order by symbol --nullÀÌ ¾Æ´Ï°í 0º¸´Ù Å©°í 
+order by symbol --nullì´ ì•„ë‹ˆê³  0ë³´ë‹¤ í¬ê³  
 
--- cte Çü½ÄÀ» »ç¿ëÇØº¸ÀÚ 
+-- cte í˜•ì‹ì„ ì‚¬ìš©í•´ë³´ì 
 with cte_stock as (
 	select 
 		a.symbol,
@@ -144,4 +144,4 @@ with cte_stock as (
 	union all 
 	select * from (select top 3 * from cte_stock where diff_price > 0 order by diff_ratio asc ) as y 
 	
--- ¿¬¼Ó 
+-- ì—°ì† 
